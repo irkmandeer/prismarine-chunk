@@ -138,7 +138,7 @@ class ChunkColumn180 extends ChunkColumn13 {
       this.sections = []
       for (let i = 0; i < sectionCount; i++) {
         // in 1.17.30+, chunk index is sent in payload
-        const section = new SubChunk(this.registry, this.Block, { y: i, subChunkVersion: this.subChunkVersion })
+        const section = new this.Section(this.registry, this.Block, { y: i, subChunkVersion: this.subChunkVersion })
         section.decode(StorageType.Runtime, stream)
         this.setSection(i, section)
       }
@@ -209,7 +209,7 @@ class ChunkColumn180 extends ChunkColumn13 {
 
   async networkDecodeSubChunkNoCache (y, buffer) {
     const stream = new Stream(buffer)
-    const section = new SubChunk(this.registry, this.Block, { y, subChunkVersion: this.subChunkVersion })
+    const section = new this.Section(this.registry, this.Block, { y, subChunkVersion: this.subChunkVersion })
     section.decode(StorageType.Runtime, stream)
     this.setSection(y, section)
 
@@ -267,7 +267,7 @@ class ChunkColumn180 extends ChunkColumn13 {
       const entry = blobStore.get(blob.toString())
 
       const stream = new Stream(entry.buffer)
-      const subchunk = new SubChunk(this.registry, this.Block, { y: blob.y, subChunkVersion: this.subChunkVersion })
+      const subchunk = new this.Section(this.registry, this.Block, { y: blob.y, subChunkVersion: this.subChunkVersion })
       await subchunk.decode(StorageType.Runtime, stream)
       this.setSection(subchunk.y, subchunk)
     }
