@@ -1,10 +1,30 @@
 const SubChunk118 = require('../1.18/SubChunk')
-const { StorageType } = require('../common/constants')
-const PalettedStorage = require('../common/PalettedStorage')
- 
+
 class SubChunk120 extends SubChunk118 {
- 
-  
+
+  loadPalettedBlocks(storageLayer, stream, bitsPerBlock, format) {
+
+    //TODO: blockStatesByRuntimeId
+    return super.loadPalettedBlocks(...arguments)
+  }
+
+  loadRuntimePalette(storageLayer, stream, paletteSize) {
+
+    if (!this.registry.blockStatesByRuntimeId) {
+
+      return super.loadRuntimePalette(...arguments)
+    }
+
+    this.palette[storageLayer] = []
+
+    for (let i = 0; i < paletteSize; i++) {
+
+      const block_runtime_id = stream.readZigZagVarInt()
+      const stateId = this.registry.blockStatesByRuntimeId[block_runtime_id]
+      const block = this.registry.blockStates[stateId]
+      this.palette[storageLayer][i] = { stateId, ...block, count: 0 }
+    }
+  }
 }
 
 module.exports = SubChunk120
