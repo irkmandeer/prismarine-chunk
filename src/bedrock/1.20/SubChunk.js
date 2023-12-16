@@ -1,10 +1,16 @@
 const SubChunk118 = require('../1.18/SubChunk')
+const { StorageType } = require('../common/constants')
+const PalettedStorage = require('../common/PalettedStorage')
 
 class SubChunk120 extends SubChunk118 {
 
   loadPalettedBlocks(storageLayer, stream, bitsPerBlock, format) {
 
     //TODO: blockStatesByRuntimeId
+    if ((format === StorageType.Runtime) && (bitsPerBlock === 0)) {
+
+      console.log('WARNING - loadPalettedBlocks not implemented')
+    }
     return super.loadPalettedBlocks(...arguments)
   }
 
@@ -21,7 +27,7 @@ class SubChunk120 extends SubChunk118 {
 
       const block_runtime_id = stream.readZigZagVarInt()
       const stateId = this.registry.blockStatesByRuntimeId[block_runtime_id]
-      const block = this.registry.blockStates[stateId]
+      const block = this.registry.blockStates[stateId] ?? this.registry.blockStates[this.registry.blockStatesByRuntimeId[-2]]
       this.palette[storageLayer][i] = { stateId, ...block, count: 0 }
     }
   }
