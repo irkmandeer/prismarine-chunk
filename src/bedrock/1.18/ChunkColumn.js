@@ -142,6 +142,7 @@ class ChunkColumn180 extends ChunkColumn13 {
         section.decode(StorageType.Runtime, stream)
 
         //Naughty PMMP sending v8 subchunks (bound:0-16) - Vanilla handles this seamlessly
+        // - Pretty sure this breaks most other things, biomes, setBlockEntity, etc
         if (section.subChunkVersion === 8) {
 
           this.subChunkVersion = section.subChunkVersion
