@@ -140,7 +140,15 @@ class ChunkColumn180 extends ChunkColumn13 {
         // in 1.17.30+, chunk index is sent in payload
         const section = new this.Section(this.registry, this.Block, { y: i, subChunkVersion: this.subChunkVersion })
         section.decode(StorageType.Runtime, stream)
-        this.setSection(i, section)
+
+        //Naughty PMMP sending v8 subchunks (bound:0-16) - Vanilla handles this seamlessly
+        if (section.subChunkVersion === 8) {
+
+          this.subChunkVersion = section.subChunkVersion
+          this.setSection(i - 4, section) //this.co should be 4, resulting in 0+ 
+        } else {
+          this.setSection(i, section)
+        }      
       }
     }
 
